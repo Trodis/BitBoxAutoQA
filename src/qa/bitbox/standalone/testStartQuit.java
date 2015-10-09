@@ -10,7 +10,6 @@ import qa.bitbox.testcasehandler.ExceptionHandling;
 
 public class testStartQuit
 {
-    private Region rg;
     private Screen scr;
     private App bitbox;
 
@@ -93,7 +92,7 @@ public class testStartQuit
         try
         {
             assertTrue(scr.wait("firefox_menu_button.PNG", 120) != null);
-            assertTrue(scr.click("bitbox_X_button.png", 1) == 1);
+            assertTrue(scr.click(new Pattern("bitbox_X_button.png").targetOffset(15, 0), 1) == 1);
             assertTrue(scr.waitVanish("bitbox_status_bar.PNG", 10));
             assertFalse(QAWinUtil.isRunning("bitb.exe"));
         }

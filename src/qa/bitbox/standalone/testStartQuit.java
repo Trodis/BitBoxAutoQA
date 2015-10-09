@@ -2,6 +2,7 @@ package qa.bitbox.standalone;
 
 import static org.junit.Assert.*;
 import org.junit.*;
+import org.sikuli.natives.WinUtil;
 import org.sikuli.script.*;
 import qa.bitbox.bitboxhandler.*;
 import qa.bitbox.testcasehandler.ExceptionHandling;
@@ -16,7 +17,16 @@ public class testStartQuit
     @Before
     public void init() throws FindFailed, InterruptedException
     {
-        ImagePath.setBundlePath("images");
+        String OS = System.getProperty("os.name").toLowerCase();
+        System.out.println(OS);
+        if (OS.equals("windows 7"))
+        {
+            ImagePath.setBundlePath("images/Windows7");
+        }
+        else if (OS.equals("windows 8"))
+        {
+            ImagePath.setBundlePath("images/Windows8");
+        }
         scr = new Screen();
 
         //Start Sequence

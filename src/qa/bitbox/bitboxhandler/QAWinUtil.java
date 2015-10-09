@@ -50,5 +50,15 @@ public class QAWinUtil
         }
     }
 
-
+    public static void logoff()
+    {
+        try
+        {
+            Runtime.getRuntime().exec("logoff.exe");
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
 }

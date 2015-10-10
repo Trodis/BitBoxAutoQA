@@ -1,5 +1,11 @@
 package qa.bitbox.bitboxhandler;
 
+import org.sikuli.script.App;
+
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,7 +33,7 @@ public class QAWinUtil
             input.close();
             return found;
         }
-        catch (Exception e)
+        catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -48,6 +54,21 @@ public class QAWinUtil
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public static App getNotepad()
+    {
+        return new App("notepad.exe");
+    }
+
+    public static String getTextFromClipboard() throws IOException, UnsupportedFlavorException
+    {
+        Toolkit defaulttool = Toolkit.getDefaultToolkit();
+        Clipboard systemclipboard = defaulttool.getSystemClipboard();
+
+        Object clipboardtext = systemclipboard.getData(DataFlavor.stringFlavor);
+
+        return (String) clipboardtext;
     }
 
     public static void logoff()

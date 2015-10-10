@@ -8,7 +8,8 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        testStartQuit.class
+        //testStartQuit.class,
+        testWindowsLogoffAbort.class
 })
 public class StandaloneTestSuite
 {}

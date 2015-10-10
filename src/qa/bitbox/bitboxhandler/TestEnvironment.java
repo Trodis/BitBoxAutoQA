@@ -8,16 +8,16 @@ import java.nio.file.FileAlreadyExistsException;
  */
 public class TestEnvironment
 {
-    public static void createTestCaseResultFolder(String name)
+    public static void createTestCaseResultFolder(String testcase_name, String test_name)
     {
-        File dir = new File(Constants.FAILEDPATH + "\\" + name);
+        File dir = new File(Constants.FAILEDPATH + "\\" + testcase_name + "\\" + test_name);
         if(dir.exists())
         {
             System.out.println("Directory: " + dir.getName() + " already exists!");
         }
         else
         {
-            dir.mkdir();
+            dir.mkdirs();
         }
     }
 
@@ -33,5 +33,4 @@ public class TestEnvironment
             dir.mkdir();
         }
     }
-
 }

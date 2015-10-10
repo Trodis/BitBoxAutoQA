@@ -6,14 +6,19 @@ import org.sikuli.script.Screen;
 import qa.bitbox.bitboxhandler.Constants;
 import qa.bitbox.bitboxhandler.TestEnvironment;
 
-/**
- * Created by Trodis on 08.10.2015.
- */
 public class ExceptionHandling
 {
-    public static void ImageNotFound(Screen scr, FindFailed e, String testcase_name)
+    public static void ImageNotFound(Screen scr, FindFailed e, String testcase_name, String testname)
     {
-        TestEnvironment.createTestCaseResultFolder(testcase_name);
-        scr.saveScreenCapture(Constants.FAILEDPATH+testcase_name, e.getMessage());
+        TestEnvironment.createTestCaseResultFolder(testcase_name, testname);
+        scr.saveScreenCapture(Constants.FAILEDPATH+"\\"+testcase_name+"\\"+testname, e.getMessage());
     }
+
+    public static void BitBoxNotStopping(Screen scr, AssertionError e, String testcase_name, String testname)
+    {
+        TestEnvironment.createTestCaseResultFolder(testcase_name, testname);
+        scr.saveScreenCapture(Constants.FAILEDPATH+testcase_name+testname, e.getMessage());
+    }
+
+
 }

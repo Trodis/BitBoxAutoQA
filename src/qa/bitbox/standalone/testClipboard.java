@@ -2,14 +2,21 @@ package qa.bitbox.standalone;
 
 import static org.junit.Assert.*;
 import org.junit.*;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
+import org.omg.CORBA.Environment;
 import org.sikuli.basics.Settings;
 import org.sikuli.natives.WinUtil;
 import org.sikuli.script.*;
 import qa.bitbox.bitboxhandler.*;
+import qa.bitbox.bitboxhandler.Constants;
 import qa.bitbox.testcasehandler.ExceptionHandling;
 
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 
-public class testWindowsLogoffAbort
+
+public class testClipboard extends TestWatcher
 {
     private Screen scr;
     private App bitbox;
@@ -51,23 +58,25 @@ public class testWindowsLogoffAbort
         }
     }
 
+    @Rule
+    public ScreenshotRule screenshotRule = new ScreenshotRule(scr);
+
     @Test
-    public void testLogoffAndAbort() throws FindFailed, InterruptedException {
-        try
-        {
-            scr.wait("firefox_menu_button.PNG", 120);
+    public void testtextToGuestAllow() throws InterruptedException, IOException, UnsupportedFlavorException
+    {
+            Settings.TypeDelay = 2;
+            App notepad = QAWinUtil.getNotepad();
             bitbox.focus();
-            QAWinUtil.logoff();
-            scr.findText("Restore Session", 10).click();
-            assertFalse(QAWinUtil.isRunning("bitb.exe"));
-        }
-        catch (FindFailed e)
-        {
-            ExceptionHandling.ImageNotFound(scr, e, this.getClass().getSimpleName(),
-                    Thread.currentThread().getStackTrace()[1].getMethodName());
-            System.out.println("Testcase: " + Thread.currentThread().getStackTrace()[1].getMethodName() + " FAILED!");
-            clean();
-        }
+            scr.type("l", Key.CTRL);
+            scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
+            notepad.focus();
+            scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
+            bitbox.focus();
+            scr.type("l", Key.CTRL);
+            scr.type("a", Key.CTRL );
+            scr.type("c", Key.CTRL);
+            assertFalse(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_A));
+            notepad.close();
     }
 
 }

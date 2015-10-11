@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class testClipboard extends TestWatcher
 {
-    private Screen scr;
+    public static Screen scr;
     private App bitbox;
 
     @Before
@@ -45,8 +45,8 @@ public class testClipboard extends TestWatcher
         bitbox = new App(QAWinUtil.getPIDFromBitBox());
     }
 
-    @After
-    public void clean() throws InterruptedException {
+    @AfterClass
+    public static void clean() throws InterruptedException {
         if(QAWinUtil.isRunning("bitb.exe"))
         {
             BitBoxUtil.stopBitBox();
@@ -59,7 +59,7 @@ public class testClipboard extends TestWatcher
     }
 
     @Rule
-    public ScreenshotRule screenshotRule = new ScreenshotRule(scr);
+    public ScreenshotRule screenshotRule = new ScreenshotRule();
 
     @Test
     public void testtextToGuestAllow() throws InterruptedException, IOException, UnsupportedFlavorException
@@ -75,8 +75,8 @@ public class testClipboard extends TestWatcher
             scr.type("l", Key.CTRL);
             scr.type("a", Key.CTRL );
             scr.type("c", Key.CTRL);
-            assertFalse(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_A));
             notepad.close();
+            assertFalse(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_A));
     }
 
 }

@@ -56,10 +56,9 @@ public class testWindowsLogoffAbort
         try
         {
             scr.wait("firefox_menu_button.PNG", 120);
-            bitbox.focus();
             QAWinUtil.logoff();
-            scr.findText("Restore Session", 10).click();
-            assertFalse(QAWinUtil.isRunning("bitb.exe"));
+            scr.click("windows_button_logoff_abort.PNG", 5);
+            assertTrue(QAWinUtil.isRunning("bitb.exe"));
         }
         catch (FindFailed e)
         {

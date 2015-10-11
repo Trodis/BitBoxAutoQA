@@ -2,12 +2,12 @@ package qa.bitbox.standalone;
 
 import static org.junit.Assert.*;
 import org.junit.*;
+import org.sikuli.basics.Settings;
 import org.sikuli.natives.WinUtil;
 import org.sikuli.script.*;
 import qa.bitbox.bitboxhandler.*;
 import qa.bitbox.bitboxhandler.Constants;
 import qa.bitbox.testcasehandler.ExceptionHandling;
-
 
 public class testStartQuit
 {
@@ -44,7 +44,8 @@ public class testStartQuit
                         .getMethodName() + " FAILED!");
                 clean();
             }
-                bitbox = new App(QAWinUtil.getPIDFromBitBox());
+            bitbox = new App(QAWinUtil.getPIDFromBitBox());
+            bitbox.focus();
         }
         else
         {
@@ -70,7 +71,6 @@ public class testStartQuit
         try
         {
             scr.wait("firefox_menu_button.PNG", 120);
-            bitbox.focus();
             scr.type("q", KeyModifier.CTRL);
             assertTrue(scr.waitVanish("bitbox_status_bar.PNG", 10));
         }
@@ -121,6 +121,4 @@ public class testStartQuit
                     .getMethodName() + " FAILED!");
         }
     }
-
-
 }

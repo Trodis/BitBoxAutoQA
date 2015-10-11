@@ -1,3 +1,5 @@
+import org.sikuli.basics.Settings;
+
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -9,6 +11,5 @@ public class Sandbox
 {
     public static void main(String args[])
     {
-
     }
 }

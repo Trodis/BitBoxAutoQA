@@ -20,5 +20,11 @@ public class ExceptionHandling
         scr.saveScreenCapture(Constants.FAILEDPATH+testcase_name+testname, e.getMessage());
     }
 
+    public static void AssertionError(Screen scr, String testcase_name, String testname, String error)
+    {
+        TestEnvironment.createTestCaseResultFolder(testcase_name, testname);
+        scr.saveScreenCapture(Constants.FAILEDPATH + "\\" + testcase_name + "\\" + testname, error);
+    }
+
 
 }

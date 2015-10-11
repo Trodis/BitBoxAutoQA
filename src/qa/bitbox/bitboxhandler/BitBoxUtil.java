@@ -16,7 +16,6 @@ public class BitBoxUtil
 {
     public static void stopBitBox() throws InterruptedException
     {
-
         App.open("C:\\Program Files (x86)\\Sirrix AG\\BitBox\\bin\\BitBoxClient.exe -q kill");
         boolean bitbox_isrunning = QAWinUtil.isRunning("bitb.exe");
 

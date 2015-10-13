@@ -1,0 +1,13 @@
+1. The registry cannot modified with the a non admin user, and letting the Test Script run as admin was not a really
+option. So the workaround is to make use of windows runas.exe tool. We run reg.exe with runas.exe /u:admin....
+But the password for admin needs to be saved first. So before running the test execute this commands once:
+
+Start cmd.exe as Admin:
+
+Net user administrator 12345
+Net user administrator /active:yes
+
+runas /u:administrator /savecred reg
+
+Enter your password and thats it, from now on the admin pass is saved!
+Whenever runas.exe is with option /savecred the password will not be prompted again!

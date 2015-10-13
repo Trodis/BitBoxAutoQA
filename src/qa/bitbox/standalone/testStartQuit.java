@@ -2,8 +2,6 @@ package qa.bitbox.standalone;
 
 import static org.junit.Assert.*;
 import org.junit.*;
-import org.sikuli.basics.Settings;
-import org.sikuli.natives.WinUtil;
 import org.sikuli.script.*;
 import qa.bitbox.bitboxhandler.*;
 import qa.bitbox.bitboxhandler.Constants;
@@ -11,114 +9,42 @@ import qa.bitbox.testcasehandler.ExceptionHandling;
 
 public class testStartQuit
 {
-    private Screen scr;
     private App bitbox;
+    private Screen scr;
+
+    @Rule
+    public BitBoxRule bitBoxRule = new BitBoxRule();
 
     @Before
-    public void init() throws InterruptedException
+    public void initReferences()
     {
-        String OS = System.getProperty("os.name").toLowerCase();
-        if (OS.equals("windows 7"))
-        {
-            ImagePath.setBundlePath("images//Windows7");
-        }
-        else if (OS.equals("windows 8.1"))
-        {
-            ImagePath.setBundlePath("images//Windows8");
-        }
-
-        //Start Sequence
-        BitBoxUtil.startBitBox();
-        if(QAWinUtil.isRunning("bitb.exe"))
-        {
-            scr = new Screen();
-            try
-            {
-                scr.wait("bitbox_status_bar.PNG", 120);
-            }
-            catch (FindFailed e)
-            {
-                ExceptionHandling.ImageNotFound(scr, e, this.getClass().getSimpleName(),
-                        Thread.currentThread().getStackTrace()[1].getMethodName());
-                System.out.println("Testcase: " + Thread.currentThread().getStackTrace()[1]
-                        .getMethodName() + " FAILED!");
-                clean();
-            }
-            bitbox = new App(QAWinUtil.getPIDFromBitBox());
-            bitbox.focus();
-        }
-        else
-        {
-            System.out.println(Constants.BITBOXSTARTERROR);
-        }
-    }
-
-    @After
-    public void clean() throws InterruptedException
-    {
-        if(QAWinUtil.isRunning("bitb.exe"))
-        {
-            BitBoxUtil.stopBitBox();
-        }
-        else
-        {
-            assertFalse(QAWinUtil.isRunning("bitb.exe"));
-        }
+        this.bitbox = bitBoxRule.getBitBox();
+        this.scr = bitBoxRule.getScreen();
     }
 
     @Test
-    public void testStartAndQuitWithKey() throws InterruptedException {
-        try
-        {
-            scr.wait("firefox_menu_button.PNG", 120);
-            scr.type("q", KeyModifier.CTRL);
-            assertTrue(scr.waitVanish("bitbox_status_bar.PNG", 10));
-        }
-        catch (FindFailed e)
-        {
-            ExceptionHandling.ImageNotFound(scr, e, this.getClass().getSimpleName(),
-                    Thread.currentThread().getStackTrace()[1].getMethodName());
-            System.out.println("Testcase: " + Thread.currentThread().getStackTrace()[1]
-                    .getMethodName() + " FAILED!");
-            clean();
-        }
+    public void testStartAndQuitWithKey() throws InterruptedException, FindFailed
+    {
+
+        scr.wait("firefox_menu_button.PNG", 120);
+        scr.type("q", KeyModifier.CTRL);
+        assertTrue(scr.waitVanish("bitbox_status_bar.PNG", 10));
     }
 
     @Test
-    public void testStartAndQuitWithQuitButton() throws InterruptedException
+    public void testStartAndQuitWithQuitButton() throws InterruptedException, FindFailed
     {
-        try
-        {
-            scr.wait("firefox_menu_button.PNG", 120);
-            scr.click("firefox_menu_button.PNG", 1);
-            scr.click("firefox_quit_button.PNG", 1);
-            assertTrue(scr.waitVanish("bitbox_status_bar.PNG", 10));
-        }
-        catch (FindFailed e)
-        {
-            ExceptionHandling.ImageNotFound(scr, e, this.getClass().getSimpleName(),
-                    Thread.currentThread().getStackTrace()[1].getMethodName());
-            System.out.println("Testcase: " + Thread.currentThread().getStackTrace()[1]
-                    .getMethodName() + " FAILED!");
-            clean();
-        }
+        scr.wait("firefox_menu_button.PNG", 120);
+        scr.click("firefox_menu_button.PNG", 1);
+        scr.click("firefox_quit_button.PNG", 1);
+        assertTrue(scr.waitVanish("bitbox_status_bar.PNG", 10));
     }
 
     @Test
-    public void testStartAndQuitWithXButton() throws InterruptedException
+    public void testStartAndQuitWithXButton() throws InterruptedException, FindFailed
     {
-        try
-        {
-            scr.wait("firefox_menu_button.PNG", 120);
-            scr.find("bitbox_window_decoration.png").click("decoration_x_button.png");
-            assertTrue(scr.waitVanish("bitbox_status_bar.PNG", 10));
-        }
-        catch (FindFailed e)
-        {
-            ExceptionHandling.ImageNotFound(scr, e, this.getClass().getSimpleName(),
-                    Thread.currentThread().getStackTrace()[1].getMethodName());
-            System.out.println("Test: " + Thread.currentThread().getStackTrace()[1]
-                    .getMethodName() + " FAILED!");
-        }
+        scr.wait("firefox_menu_button.PNG", 120);
+        scr.find("bitbox_window_decoration.png").click("decoration_x_button.png");
+        assertTrue(scr.waitVanish("bitbox_status_bar.PNG", 10));
     }
 }

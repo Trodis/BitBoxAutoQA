@@ -71,6 +71,38 @@ public class QAWinUtil
         return (String) clipboardtext;
     }
 
+    public static String[] getRegValue(String regpath)
+    {
+        try
+        {
+            Process p = Runtime.getRuntime().exec("reg.exe query " + regpath + " /v type");
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String out;
+            while((out = input.readLine()) != null)
+            {
+                if (out.trim().startsWith("type"))
+                {
+                    return out.trim().replaceAll("\\s+", " ").split(" ");
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        }
+        catch (IOException | IndexOutOfBoundsException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void setRegValue(String regpath, String value) throws IOException
+    {
+        Runtime.getRuntime().exec("runas.exe /u:administrator /savecred \"reg add " +
+                regpath + " /f /v type /d " + value + "\"");
+    }
+
     public static void logoff()
     {
         try

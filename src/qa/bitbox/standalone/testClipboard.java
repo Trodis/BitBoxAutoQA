@@ -2,11 +2,8 @@ package qa.bitbox.standalone;
 
 import static org.junit.Assert.*;
 import org.junit.*;
-import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
-import org.omg.CORBA.Environment;
 import org.sikuli.basics.Settings;
-import org.sikuli.natives.WinUtil;
 import org.sikuli.script.*;
 import qa.bitbox.bitboxhandler.*;
 import qa.bitbox.bitboxhandler.Constants;
@@ -16,67 +13,243 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
 
-public class testClipboard extends TestWatcher
+public class testClipboard
 {
-    public static Screen scr;
     private App bitbox;
+    private Screen scr;
 
-    @Before
-    public void init() throws FindFailed, InterruptedException
-    {
-        String OS = System.getProperty("os.name").toLowerCase();
-        Settings.OcrTextSearch = true;
-        System.out.println(OS);
-        if (OS.equals("windows 7"))
-        {
-            ImagePath.setBundlePath("images/Windows7");
-        }
-        else if (OS.equals("windows 8.1"))
-        {
-            ImagePath.setBundlePath("images/Windows8");
-        }
-        scr = new Screen();
-
-        //Start Sequence
-        BitBoxUtil.startBitBox();
-        assertTrue(QAWinUtil.isRunning("bitb.exe"));
-        assertTrue(scr.wait("bitbox_status_bar.PNG", 120) != null);
-
-        bitbox = new App(QAWinUtil.getPIDFromBitBox());
-    }
-
-    @AfterClass
-    public static void clean() throws InterruptedException {
-        if(QAWinUtil.isRunning("bitb.exe"))
-        {
-            BitBoxUtil.stopBitBox();
-            assertFalse(QAWinUtil.isRunning("bitb.exe"));
-        }
-        else
-        {
-            assertFalse(QAWinUtil.isRunning("bitb.exe"));
-        }
-    }
 
     @Rule
-    public ScreenshotRule screenshotRule = new ScreenshotRule();
+    public BitBoxClipboardTestRule bitBoxRule = new BitBoxClipboardTestRule();
+
+    @Before
+    public void initReferences()
+    {
+        this.bitbox = bitBoxRule.getBitBox();
+        this.scr = bitBoxRule.getScreen();
+    }
 
     @Test
-    public void testtextToGuestAllow() throws InterruptedException, IOException, UnsupportedFlavorException
+    public void testTextToGuestAllow() throws InterruptedException, IOException, UnsupportedFlavorException
     {
-            Settings.TypeDelay = 2;
-            App notepad = QAWinUtil.getNotepad();
-            bitbox.focus();
-            scr.type("l", Key.CTRL);
-            scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
-            notepad.focus();
-            scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
-            bitbox.focus();
-            scr.type("l", Key.CTRL);
-            scr.type("a", Key.CTRL );
-            scr.type("c", Key.CTRL);
-            notepad.close();
-            assertFalse(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_A));
+        App notepad = QAWinUtil.getNotepad();
+        scr.type("l", Key.CTRL);
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
+        notepad.focus();
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
+        bitbox.focus();
+        scr.type("l", Key.CTRL);
+        scr.type("a", Key.CTRL );
+        scr.type("c", Key.CTRL);
+        notepad.close();
+        assertTrue(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_A));
+    }
+
+    @Test
+    public void testTextToGuestDeny() throws InterruptedException, IOException, UnsupportedFlavorException
+    {
+        App notepad = QAWinUtil.getNotepad();
+
+        scr.type("l", Key.CTRL);
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
+
+        try
+        {
+            scr.wait("bitbox_clipboard_deny_info_symbol.PNG", 5);
+            scr.type(Key.ENTER);
+            scr.waitVanish("bitbox_clipboard_deny_info_symbol.PNG", 5);
+        }
+        catch (FindFailed e)
+        {
+            ExceptionHandling.ImageNotFound(scr, e, this.getClass().getName(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
+
+        notepad.focus();
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
+        bitbox.focus();
+        scr.type("l", Key.CTRL);
+        scr.type("a", Key.CTRL);
+        scr.type("c", Key.CTRL);
+        notepad.close();
+
+        assertTrue(Constants.CLIPBOARDTESTCONTENT_B.equals(QAWinUtil.getTextFromClipboard()));
+    }
+
+    @Test
+    public void testTextToGuestAskUserYES() throws InterruptedException, IOException, UnsupportedFlavorException
+    {
+        App notepad = QAWinUtil.getNotepad();
+
+        scr.type("l", Key.CTRL);
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
+
+        try
+        {
+            scr.wait("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+            scr.type("J"); //Key: J
+            scr.waitVanish("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+        }
+        catch (FindFailed e)
+        {
+            ExceptionHandling.ImageNotFound(scr, e, this.getClass().getName(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
+
+        notepad.focus();
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
+        notepad.close();
+        bitbox.focus();
+        scr.type("l", Key.CTRL);
+        scr.type("a", Key.CTRL);
+        scr.type("c", Key.CTRL);
+
+        assertTrue(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_A));
+    }
+
+
+    @Test
+    public void testTextToGuestAskUserNO() throws InterruptedException, IOException, UnsupportedFlavorException
+    {
+        App notepad = QAWinUtil.getNotepad();
+
+        scr.type("l", Key.CTRL);
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
+
+        try
+        {
+            scr.wait("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+            scr.type("N"); //Key: J
+            scr.waitVanish("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+        }
+        catch (FindFailed e)
+        {
+            ExceptionHandling.ImageNotFound(scr, e, this.getClass().getName(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
+
+        notepad.focus();
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
+        notepad.close();
+        bitbox.focus();
+        scr.type("l", Key.CTRL);
+        scr.type("a", Key.CTRL);
+        scr.type("c", Key.CTRL);
+
+        assertTrue(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_B));
+    }
+
+    @Test
+    public void testTextToHostAllow() throws InterruptedException, IOException, UnsupportedFlavorException
+    {
+        App notepad = QAWinUtil.getNotepad();
+
+        scr.type("l", Key.CTRL);
+        scr.type(Constants.CLIPBOARDTESTCONTENT_A);
+        scr.type("a", Key.CTRL);
+        scr.type("c", Key.CTRL);
+        notepad.focus();
+        scr.type("v", Key.CTRL);
+        bitbox.focus();
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
+        notepad.focus();
+        scr.type("a", Key.CTRL);
+        scr.type("c", Key.CTRL);
+
+        assertTrue(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_A));
+    }
+
+    @Test
+    public void testTextToHostDeny() throws InterruptedException, IOException, UnsupportedFlavorException
+    {
+        App notepad = QAWinUtil.getNotepad();
+
+        scr.type("l", Key.CTRL);
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
+
+        try
+        {
+            scr.wait("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+            scr.type("N"); //Key: J
+            scr.waitVanish("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+        }
+        catch (FindFailed e)
+        {
+            ExceptionHandling.ImageNotFound(scr, e, this.getClass().getName(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
+
+        notepad.focus();
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
+        notepad.close();
+        bitbox.focus();
+        scr.type("l", Key.CTRL);
+        scr.type("a", Key.CTRL);
+        scr.type("c", Key.CTRL);
+
+        assertTrue(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_B));
+    }
+
+    @Test
+    public void testTextToHostAskUserYES() throws InterruptedException, IOException, UnsupportedFlavorException
+    {
+        App notepad = QAWinUtil.getNotepad();
+
+        scr.type("l", Key.CTRL);
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
+
+        try
+        {
+            scr.wait("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+            scr.type("N"); //Key: J
+            scr.waitVanish("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+        }
+        catch (FindFailed e)
+        {
+            ExceptionHandling.ImageNotFound(scr, e, this.getClass().getName(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
+
+        notepad.focus();
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
+        notepad.close();
+        bitbox.focus();
+        scr.type("l", Key.CTRL);
+        scr.type("a", Key.CTRL);
+        scr.type("c", Key.CTRL);
+
+        assertTrue(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_B));
+    }
+
+    @Test
+    public void testTextToHostAskUserNO() throws InterruptedException, IOException, UnsupportedFlavorException
+    {
+        App notepad = QAWinUtil.getNotepad();
+
+        scr.type("l", Key.CTRL);
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
+
+        try
+        {
+            scr.wait("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+            scr.type("N"); //Key: J
+            scr.waitVanish("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+        }
+        catch (FindFailed e)
+        {
+            ExceptionHandling.ImageNotFound(scr, e, this.getClass().getName(),
+                    Thread.currentThread().getStackTrace()[1].getMethodName());
+        }
+
+        notepad.focus();
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
+        notepad.close();
+        bitbox.focus();
+        scr.type("l", Key.CTRL);
+        scr.type("a", Key.CTRL);
+        scr.type("c", Key.CTRL);
+
+        assertTrue(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_B));
     }
 
 }

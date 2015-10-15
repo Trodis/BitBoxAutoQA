@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 import org.junit.*;
 import org.sikuli.script.*;
 import qa.bitbox.bitboxhandler.*;
-import qa.bitbox.bitboxhandler.Constants;
-import qa.bitbox.testcasehandler.ExceptionHandling;
 
 public class testStartQuit
 {
@@ -13,13 +11,13 @@ public class testStartQuit
     private Screen scr;
 
     @Rule
-    public BitBoxRule bitBoxRule = new BitBoxRule();
+    public BitBoxGeneralTestRule bitBoxGeneralTestRule = new BitBoxGeneralTestRule();
 
     @Before
     public void initReferences()
     {
-        this.bitbox = bitBoxRule.getBitBox();
-        this.scr = bitBoxRule.getScreen();
+        this.bitbox = bitBoxGeneralTestRule.getBitBox();
+        this.scr = bitBoxGeneralTestRule.getScreen();
     }
 
     @Test

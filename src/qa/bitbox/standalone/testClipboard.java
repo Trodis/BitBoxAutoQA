@@ -29,6 +29,13 @@ public class testClipboard
         this.scr = bitBoxRule.getScreen();
     }
 
+    @AfterClass
+    public static void resetPolicy() throws IOException
+    {
+        BitBoxUtil.setPolicyTextToGuest(Constants.ALLOW);
+        BitBoxUtil.setPolicyTextToHost(Constants.ALLOW);
+    }
+
     @Test
     public void testTextToGuestAllow() throws InterruptedException, IOException, UnsupportedFlavorException
     {
@@ -55,9 +62,9 @@ public class testClipboard
 
         try
         {
-            scr.wait("bitbox_clipboard_deny_info_symbol.PNG", 5);
+            scr.wait("bitbox_info_symbol.PNG", 5);
             scr.type(Key.ENTER);
-            scr.waitVanish("bitbox_clipboard_deny_info_symbol.PNG", 5);
+            scr.waitVanish("bitbox_info_symbol.PNG", 5);
         }
         catch (FindFailed e)
         {
@@ -86,9 +93,9 @@ public class testClipboard
 
         try
         {
-            scr.wait("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+            scr.wait("bitbox_question_symbol.PNG", 5);
             scr.type("J"); //Key: J
-            scr.waitVanish("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+            scr.waitVanish("bitbox_question_symbol.PNG", 5);
         }
         catch (FindFailed e)
         {
@@ -118,9 +125,9 @@ public class testClipboard
 
         try
         {
-            scr.wait("bitbox_clipboard_askUser_question_symbol.PNG", 5);
-            scr.type("N"); //Key: J
-            scr.waitVanish("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+            scr.wait("bitbox_question_symbol.PNG", 5);
+            scr.type("N"); //Key: N
+            scr.waitVanish("bitbox_question_symbol.PNG", 5);
         }
         catch (FindFailed e)
         {
@@ -156,6 +163,7 @@ public class testClipboard
         scr.type("a", Key.CTRL);
         scr.type("c", Key.CTRL);
 
+        notepad.close();
         assertTrue(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_A));
     }
 
@@ -165,13 +173,17 @@ public class testClipboard
         App notepad = QAWinUtil.getNotepad();
 
         scr.type("l", Key.CTRL);
-        scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
+        scr.type(Constants.CLIPBOARDTESTCONTENT_A);
+        scr.type("a", Key.CTRL);
+        scr.type("c", Key.CTRL);
+        notepad.focus();
+        scr.type("v", Key.CTRL);
 
         try
         {
-            scr.wait("bitbox_clipboard_askUser_question_symbol.PNG", 5);
-            scr.type("N"); //Key: J
-            scr.waitVanish("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+            scr.wait("bitbox_info_symbol.PNG", 5);
+            scr.type(Key.ENTER);
+            scr.waitVanish("bitbox_info_symbol.PNG", 5);
         }
         catch (FindFailed e)
         {
@@ -179,14 +191,13 @@ public class testClipboard
                     Thread.currentThread().getStackTrace()[1].getMethodName());
         }
 
-        notepad.focus();
-        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
-        notepad.close();
         bitbox.focus();
-        scr.type("l", Key.CTRL);
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
+        notepad.focus();
         scr.type("a", Key.CTRL);
         scr.type("c", Key.CTRL);
 
+        notepad.close();
         assertTrue(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_B));
     }
 
@@ -196,13 +207,17 @@ public class testClipboard
         App notepad = QAWinUtil.getNotepad();
 
         scr.type("l", Key.CTRL);
-        scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
+        scr.type(Constants.CLIPBOARDTESTCONTENT_A);
+        scr.type("a", Key.CTRL);
+        scr.type("c", Key.CTRL);
+        notepad.focus();
+        scr.type("v", Key.CTRL);
 
         try
         {
-            scr.wait("bitbox_clipboard_askUser_question_symbol.PNG", 5);
-            scr.type("N"); //Key: J
-            scr.waitVanish("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+            scr.wait("bitbox_question_symbol.PNG", 5);
+            scr.type("J"); //Key: J
+            scr.waitVanish("bitbox_question_symbol.PNG", 5);
         }
         catch (FindFailed e)
         {
@@ -210,15 +225,14 @@ public class testClipboard
                     Thread.currentThread().getStackTrace()[1].getMethodName());
         }
 
-        notepad.focus();
-        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
-        notepad.close();
         bitbox.focus();
-        scr.type("l", Key.CTRL);
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
+        notepad.focus();
         scr.type("a", Key.CTRL);
         scr.type("c", Key.CTRL);
 
-        assertTrue(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_B));
+        notepad.close();
+        assertTrue(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_A));
     }
 
     @Test
@@ -227,13 +241,17 @@ public class testClipboard
         App notepad = QAWinUtil.getNotepad();
 
         scr.type("l", Key.CTRL);
-        scr.paste(Constants.CLIPBOARDTESTCONTENT_A);
+        scr.type(Constants.CLIPBOARDTESTCONTENT_A);
+        scr.type("a", Key.CTRL);
+        scr.type("c", Key.CTRL);
+        notepad.focus();
+        scr.type("v", Key.CTRL);
 
         try
         {
-            scr.wait("bitbox_clipboard_askUser_question_symbol.PNG", 5);
-            scr.type("N"); //Key: J
-            scr.waitVanish("bitbox_clipboard_askUser_question_symbol.PNG", 5);
+            scr.wait("bitbox_question_symbol.PNG", 5);
+            scr.type("N");
+            scr.waitVanish("bitbox_question_symbol.PNG", 5);
         }
         catch (FindFailed e)
         {
@@ -241,14 +259,13 @@ public class testClipboard
                     Thread.currentThread().getStackTrace()[1].getMethodName());
         }
 
-        notepad.focus();
-        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
-        notepad.close();
         bitbox.focus();
-        scr.type("l", Key.CTRL);
+        scr.paste(Constants.CLIPBOARDTESTCONTENT_B);
+        notepad.focus();
         scr.type("a", Key.CTRL);
         scr.type("c", Key.CTRL);
 
+        notepad.close();
         assertTrue(QAWinUtil.getTextFromClipboard().equals(Constants.CLIPBOARDTESTCONTENT_B));
     }
 

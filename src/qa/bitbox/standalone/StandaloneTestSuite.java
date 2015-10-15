@@ -6,7 +6,6 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         testStartQuit.class,
-        testWindowsLogoffAbort.class,
         testClipboard.class,
         testDownload.class
 })

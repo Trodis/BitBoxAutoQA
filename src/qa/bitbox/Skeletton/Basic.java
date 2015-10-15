@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.sikuli.script.App;
 import org.sikuli.script.Screen;
 
-import qa.bitbox.bitboxhandler.BitBoxRule;
+import qa.bitbox.bitboxhandler.BitBoxGeneralTestRule;
 
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
@@ -19,13 +19,13 @@ public class Basic
     private Screen scr;
 
     @Rule
-    public BitBoxRule bitBoxRule = new BitBoxRule();
+    public BitBoxGeneralTestRule bitBoxGeneralTestRule = new BitBoxGeneralTestRule();
 
     @Before
     public void initReferences()
     {
-        this.bitbox = bitBoxRule.getBitBox();
-        this.scr = bitBoxRule.getScreen();
+        this.bitbox = bitBoxGeneralTestRule.getBitBox();
+        this.scr = bitBoxGeneralTestRule.getScreen();
     }
 
     @Test

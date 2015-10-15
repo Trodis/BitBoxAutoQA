@@ -3,9 +3,6 @@ package qa.bitbox.bitboxhandler;
 import java.io.File;
 import java.nio.file.FileAlreadyExistsException;
 
-/**
- * Created by Trodis on 08.10.2015.
- */
 public class TestEnvironment
 {
     public static void createTestCaseResultFolder(String testcase_name, String test_name)

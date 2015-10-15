@@ -9,18 +9,17 @@ import org.sikuli.script.ImagePath;
 import org.sikuli.script.Screen;
 import qa.bitbox.testcasehandler.ExceptionHandling;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by Trodis on 10.10.2015.
- */
-public class BitBoxRule extends TestWatcher
+public class BitBoxGeneralTestRule extends TestWatcher
 {
     public Screen scr;
     public App bitbox;
 
-    public BitBoxRule()
+    public BitBoxGeneralTestRule()
     {
         this.scr = new Screen();
     }
@@ -66,10 +65,13 @@ public class BitBoxRule extends TestWatcher
     {
         if(QAWinUtil.isRunning("bitb.exe"))
         {
-            try {
+            try
+            {
                 BitBoxUtil.killBitBox();
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
+            }
+            catch (IOException | InterruptedException killFailed)
+            {
+                killFailed.printStackTrace();
             }
             assertFalse(QAWinUtil.isRunning("bitb.exe"));
         }

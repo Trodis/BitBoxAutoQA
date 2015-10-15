@@ -2,10 +2,8 @@ package qa.bitbox.standalone;
 
 import static org.junit.Assert.*;
 import org.junit.*;
-import org.sikuli.basics.Settings;
 import org.sikuli.script.*;
 import qa.bitbox.bitboxhandler.*;
-import qa.bitbox.testcasehandler.ExceptionHandling;
 
 
 public class testWindowsLogoffAbort
@@ -14,7 +12,7 @@ public class testWindowsLogoffAbort
     private App bitbox;
 
     @Rule
-    public BitBoxRule bitBoxRule = new BitBoxRule();
+    public BitBoxGeneralTestRule bitBoxGeneralTestRule = new BitBoxGeneralTestRule();
 
 
     @Test

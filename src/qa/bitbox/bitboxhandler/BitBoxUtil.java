@@ -17,11 +17,14 @@ import static org.junit.Assert.assertTrue;
  */
 public class BitBoxUtil
 {
-    public static void killBitBox() throws InterruptedException
-    {
+    public static void killBitBox() throws InterruptedException, IOException {
+        /*
         App.open("C:\\Program Files (x86)\\Sirrix AG\\BitBox\\bin\\BitBoxClient.exe -q kill");
         boolean bitbox_isrunning = QAWinUtil.isRunning("bitb.exe");
+        */
 
+        QAWinUtil.killTask(QAWinUtil.getPIDFromBitBox());
+        boolean bitbox_isrunning = QAWinUtil.isRunning("bitb.exe");
         int counter = 0;
         while (bitbox_isrunning && counter < 5)
         {
@@ -45,56 +48,56 @@ public class BitBoxUtil
         }
     }
 
-    public static void settRegValueTextToGuest(String value) throws IOException
+    public static void setPolicyTextToGuest(String value) throws IOException
     {
         QAWinUtil.setRegValue(Constants.SET_REGPOLICYTTG, value);
     }
 
-    public static void setRegValueTextToHost(String value) throws IOException
+    public static void setPolicyTextToHost(String value) throws IOException
     {
         QAWinUtil.setRegValue(Constants.SET_REGPOLICYTTH, value);
     }
 
-    public static void setRegValueDownload(String value) throws IOException
+    public static void setPolicyDownload(String value) throws IOException
     {
         QAWinUtil.setRegValue(Constants.SET_REGPOLICYDOWNLOAD, value);
     }
 
-    public static void setRegValuePrint(String value) throws IOException
+    public static void setPolicyPrint(String value) throws IOException
     {
         QAWinUtil.setRegValue(Constants.SET_REGPOLICYPRINT, value);
     }
 
-    public static void setRegValueUpload(String value) throws IOException
+    public static void setPolicyUpload(String value) throws IOException
     {
         QAWinUtil.setRegValue(Constants.SET_REGPOLICYUPLOAD, value);
     }
 
-    public static String getRegValueTextToGuest()
+    public static String getPolicyTextToGuest()
     {
         String [] policy = QAWinUtil.getRegValue(Constants.GET_REGPOLICYTTG);
         return policy[policy.length-1];
     }
 
-    public static String getRegValueTextToHost()
+    public static String getPolicyTextToHost()
     {
         String [] policy = QAWinUtil.getRegValue(Constants.GET_REGPOLICYTTH);
         return policy[policy.length-1];
     }
 
-    public static String getRegValueDownload()
+    public static String getPolicyDownload()
     {
         String [] policy = QAWinUtil.getRegValue(Constants.GET_REGPOLICYDOWNLOAD);
         return policy[policy.length-1];
     }
 
-    public static String getRegValuePrint()
+    public static String getPolicyPrint()
     {
         String [] policy = QAWinUtil.getRegValue(Constants.GET_REGPOLICYPRINT);
         return policy[policy.length-1];
     }
 
-    public static String getRegValueUpload()
+    public static String getPolicyUpload()
     {
         String [] policy = QAWinUtil.getRegValue(Constants.GET_REGPOLICYUPLOAD);
         return policy[policy.length-1];

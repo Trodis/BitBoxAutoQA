@@ -13,12 +13,12 @@ import java.io.IOException;
 import static org.junit.Assert.assertFalse;
 
 
-public class BitBoxClipboardTestRule extends TestWatcher
+public class BitBoxDownloadTestRule extends TestWatcher
 {
     public Screen scr;
     public App bitbox;
 
-    public BitBoxClipboardTestRule()
+    public BitBoxDownloadTestRule()
     {
         this.scr = new Screen();
     }
@@ -26,46 +26,20 @@ public class BitBoxClipboardTestRule extends TestWatcher
     @Override
     protected void starting(Description d)
     {
-        String OS = System.getProperty("os.name").toLowerCase();
-        System.out.println(System.getProperty("os.name").toLowerCase());
-        if (OS.equals("windows 7"))
-        {
-            ImagePath.setBundlePath("images/Windows7");
-        }
-        else if (OS.equals("windows 8.1"))
-        {
-            ImagePath.setBundlePath("images/Windows8");
-        }
-
+        scr.mouseMove(0,0);
         try
         {
             switch (d.getMethodName())
             {
-                case "testTextToGuestAllow":
-                    BitBoxUtil.setPolicyTextToGuest(Constants.ALLOW);
-                    BitBoxUtil.setPolicyTextToHost(Constants.ALLOW);
+                case "testDownloadAllow":
+                    BitBoxUtil.setPolicyDownload(Constants.ALLOW);
                     break;
-                case "testTextToGuestDeny":
-                    BitBoxUtil.setPolicyTextToGuest(Constants.DENY);
-                    BitBoxUtil.setPolicyTextToHost(Constants.ALLOW);
+                case "testDownloadDeny":
+                    BitBoxUtil.setPolicyDownload(Constants.DENY);
                     break;
-                case "testTextToGuestAskUserYES":
-                case "testTextToGuestAskUserNO":
-                    BitBoxUtil.setPolicyTextToGuest(Constants.ASKUSER);
-                    BitBoxUtil.setPolicyTextToHost(Constants.ALLOW);
-                    break;
-                case "testTextToHostAllow":
-                    BitBoxUtil.setPolicyTextToGuest(Constants.ALLOW);
-                    BitBoxUtil.setPolicyTextToHost(Constants.ALLOW);
-                    break;
-                case "testTextToHostDeny":
-                    BitBoxUtil.setPolicyTextToGuest(Constants.ALLOW);
-                    BitBoxUtil.setPolicyTextToHost(Constants.DENY);
-                    break;
-                case "testTextToHostAskUserYES":
-                case "testTextToHostAskUserNO":
-                    BitBoxUtil.setPolicyTextToGuest(Constants.ALLOW);
-                    BitBoxUtil.setPolicyTextToHost(Constants.ASKUSER);
+                case "testDownloadAskUserYES":
+                case "testDownloadAskUserNO":
+                    BitBoxUtil.setPolicyDownload(Constants.ASKUSER);
                     break;
             }
 

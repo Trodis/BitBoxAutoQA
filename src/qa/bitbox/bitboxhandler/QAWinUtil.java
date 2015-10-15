@@ -10,9 +10,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**
- * Created by Trodis on 09.10.2015.
- */
 public class QAWinUtil
 {
     public static boolean isRunning(String process_name)
@@ -101,6 +98,11 @@ public class QAWinUtil
     {
         Runtime.getRuntime().exec("runas.exe /u:administrator /savecred \"reg add " +
                 regpath + " /f /v type /d " + value + "\"");
+    }
+
+    public static void killTask(int pid) throws IOException
+    {
+        Runtime.getRuntime().exec("runas.exe /u:administrator /savecred \"taskkill /pid " + pid+"\"");
     }
 
     public static void logoff()
